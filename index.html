@@ -26,8 +26,8 @@ button.on{background:var(--acc);color:#fff}
 .cols{display:flex;align-items:flex-end;gap:6px;height:90px}
 .cols div{flex:1;text-align:center;font-size:10px;color:var(--mut)}
 .cols i{display:block;margin:0 auto 3px;width:70%;background:var(--acc);border-radius:4px 4px 0 0}
-.two{display:flex;align-items:flex-end;justify-content:center;gap:2px;height:80px}
-.two i{display:block;width:10px;border-radius:3px 3px 0 0}
+.two{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:80px;margin-bottom:3px}
+.two i{display:block;width:22px}.two i:first-child{border-radius:4px 4px 0 0}
 select{width:100%;border:0;border-radius:8px;padding:9px;background:var(--bar);color:var(--fg);font:inherit}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
 .dn{display:block;margin:0 auto 8px;width:230px;max-width:100%}.dn text{fill:var(--fg);text-anchor:middle}
@@ -54,7 +54,7 @@ button:active{transform:scale(.96)}
 .g1 .kpi div{animation:up .9s cubic-bezier(.2,.8,.2,1) both}
 .g1 .kpi div:nth-child(2){animation-delay:.1s}.g1 .kpi div:nth-child(3){animation-delay:.2s}
 .g1 #cat .trk i{animation:gw 1.4s cubic-bezier(.2,.8,.2,1) both}
-.g1 #mon .two i,.g2 #cm i{animation:gh 1.4s cubic-bezier(.2,.8,.2,1) both}
+.g1 #mon .two i,.g2 #cg i{animation:gh 1.4s cubic-bezier(.2,.8,.2,1) both}
 .g1 .dn circle{animation:ds 1s cubic-bezier(.2,.8,.2,1) both}
 .dn circle{transition:stroke-width .6s cubic-bezier(.2,.8,.2,1),opacity .6s ease}
 #cat .row{transition:background .5s ease}#cat .row.sel{background:var(--bar)}
@@ -80,9 +80,9 @@ button:active{transform:scale(.96)}
 <div class="seg"><select id="mm"><option value="0">Pilih bulan tertentu…</option><option value="6">Juni 2026</option><option value="7">Juli 2026</option><option value="8">Agustus 2026</option><option value="9">September 2026</option><option value="10">Oktober 2026</option><option value="11">November 2026</option></select></div>
 <div class="kpi" id="kpi"></div>
 <div class="card"><h2>Masuk dan keluar per bulan</h2><div class="cols" id="mon"></div>
-<div class="mut" style="margin-top:6px"><span style="color:var(--grn)">■</span> masuk <span style="color:var(--red)">■</span> keluar</div></div>
+<div class="mut" style="margin-top:6px"><span style="color:var(--red)">■</span> keluar <span style="color:var(--grn)">■</span> sisa <span style="display:inline-block;width:9px;height:9px;vertical-align:-1px;background:repeating-linear-gradient(45deg,var(--red) 0 3px,rgba(0,0,0,.35) 3px 6px)"></span> kurang</div></div>
 <div class="card"><h2>Kategori pengeluaran</h2><div id="dn"></div><div id="cat"></div></div>
-<div class="card"><h2 id="dt"></h2><div class="cols" id="cm"></div>
+<div class="card"><h2 id="dt"></h2><div class="cols" id="cg"></div>
 <div class="seg sg" id="mdg"><i class="pl"></i><button id="bs">Menurut Rp</button><button id="bf">Menurut frekuensi</button></div>
 <div id="nt"></div></div>
 <div class="end"></div>
@@ -96,18 +96,20 @@ function ok(m){return ms().indexOf(m)>-1}
 function tot(c,m){var s=0;D[c].forEach(function(r){if(m?r[0]==m:ok(r[0]))s+=r[1]});return s}
 function nn(t){t=t.toLowerCase().replace(/\s+\d+$/,'');if(t=='mi ayam')t='mie ayam';return t=='-'?'tanpa catatan':t}
 function out(m){var s=0;for(var c in D)s+=tot(c,m);return s}
+function bar(m){var a=IN[m]||0,o=out(m),h=70,t='',S='repeating-linear-gradient(45deg,var(--red) 0 3px,rgba(0,0,0,.35) 3px 6px)';if(o>a){var k=a?a/o*h:0;t=(h-k>0?'<i style="height:'+(h-k)+'px;background:'+S+'"></i>':'')+(k>0?'<i style="height:'+k+'px;background:var(--red)"></i>':'')}else if(a){var r=o/a*h;t=(h-r>0?'<i style="height:'+(h-r)+'px;background:var(--grn)"></i>':'')+(r>0?'<i style="height:'+r+'px;background:var(--red)"></i>':'')}return '<div class="two">'+t+'</div>'}
+function lab(m){var a=IN[m]||0,o=out(m),r='<b style="color:var(--red);font-size:11px">';return o>a?r+'\u2212'+rp(o-a)+'</b><br>'+r+pcs(m,0)+'</b>':'<b style="color:var(--grn);font-size:11px">'+pcs(m,1)+'</b><br>'+r+pcs(m,0)+'</b>'}
 function draw(){
 var R=ms(),mi=0,mo=0;R.forEach(function(m){mi+=IN[m];mo+=out(m)});
 var K1=ms().join(),K2=K1+'|'+sel,c1=K1!=LK1;document.body.className=(c1?'g1 ':'')+(K2!=LK2?'g2':'');LK1=K1;LK2=K2;$('mm').value=M;if(!$('rng').firstChild)$('rng').innerHTML='<i class="pl"></i>'+[[1,'1 bln'],[2,'2 bln'],[3,'3 bln'],[6,'Semua']].map(function(a){return '<button data-n="'+a[0]+'">'+a[1]+'</button>'}).join('');$('rng').querySelectorAll('button').forEach(function(b){b.className=+b.dataset.n==N&&!M?'on':''});sl($('rng'),M?-1:[1,2,3,6].indexOf(N));
 $('kpi').innerHTML='<div><span class="mut">Masuk</span><b data-v="'+mi+'">'+rp(mi)+'</b></div><div><span class="mut">Keluar</span><b data-v="'+mo+'">'+rp(mo)+'</b></div><div><span class="mut">Sisa</span><b data-v="'+(mi-mo)+'">'+rp(mi-mo)+'</b></div>';
 if(document.body.className.indexOf('g1')>-1)cnt();var mx=Math.max.apply(0,R.map(function(m){return Math.max(IN[m],out(m))}));
-$('mon').innerHTML=R.map(function(m){return '<div'+(PT[m]?' style="opacity:.7"':'')+'><div class="two"><i style="height:'+IN[m]/mx*70+'px;background:var(--grn)"></i><i style="height:'+out(m)/mx*70+'px;background:var(--red)"></i></div>'+NM[m]+'<br><b style="color:var(--grn);font-size:11px">'+pcs(m,1)+'</b><br><b style="color:var(--red);font-size:11px">'+pcs(m,0)+'</b><br><small style="font-size:9px;color:var(--acc);'+(PT[m]?'':'visibility:hidden')+'">berjalan</small></div>'}).join('');
+$('mon').innerHTML=R.map(function(m){return '<div'+(PT[m]?' style="opacity:.7"':'')+'>'+bar(m)+NM[m]+'<br>'+lab(m)+'<br><small style="font-size:9px;color:var(--acc);'+(PT[m]?'':'visibility:hidden')+'">berjalan</small></div>'}).join('');
 var cs=Object.keys(D).map(function(c){return[c,tot(c)]}).filter(function(a){return a[1]>0}).sort(function(a,b){return b[1]-a[1]});
 if(!cs.some(function(a){return a[0]==sel}))sel=cs[0][0];
 if(c1||!$('dn').firstChild){var CL={},C=263.9,off=0,sv='',lb='';cs.forEach(function(a,i){CL[a[0]]=i<8?PAL[i]:'#98a2b3';var l=a[1]/mo*C,w=Math.max(l-1,0);sv+='<circle data-c="'+a[0]+'" cx="60" cy="60" r="42" fill="none" stroke="'+CL[a[0]]+'" stroke-width="'+(a[0]==sel?26:20)+'" stroke-dasharray="'+w+' '+(C-w)+'" stroke-dashoffset="'+(-off)+'" transform="rotate(-90 60 60)" style="cursor:pointer;opacity:'+(a[0]==sel?1:.5)+'"/>';if(l/C>=.05){var g=((off+l/2)/C*360-90)*Math.PI/180;lb+='<text class="lb" x="'+(60+42*Math.cos(g)).toFixed(1)+'" y="'+(60+42*Math.sin(g)).toFixed(1)+'" font-size="6" font-weight="700" dominant-baseline="central" style="fill:#fff;stroke:rgba(0,0,0,.35);stroke-width:1px;paint-order:stroke;pointer-events:none">'+(l/C*100).toFixed(1).replace('.',',')+'%</text>'}off+=l});$('dn').innerHTML='<svg class="dn" viewBox="0 0 120 120">'+sv+lb+'<text x="60" y="58" font-size="9" font-weight="700">'+rp(mo)+'</text><text x="60" y="70" font-size="6" style="fill:var(--mut)">total keluar</text></svg>';$('cat').innerHTML=cs.map(function(a){var p=a[1]/mo*100;return '<div class="row'+(a[0]==sel?' sel':'')+'" data-c="'+a[0]+'"><span><i class="dot" style="background:'+CL[a[0]]+'"></i>'+a[0]+'</span><div class="trk"><i style="width:'+p+'%;background:'+CL[a[0]]+'"></i></div><span class="num">'+rp(a[1])+'</span></div>'}).join('');
 }else{$('dn').querySelectorAll('circle').forEach(function(c){var s=c.dataset.c==sel;c.setAttribute('stroke-width',s?26:20);c.style.opacity=s?1:.5});$('cat').querySelectorAll('.row').forEach(function(r){r.classList.toggle('sel',r.dataset.c==sel)})}$('dt').textContent='Rincian: '+sel;
 var cm=R.map(function(m){return tot(sel,m)}),cx=Math.max.apply(0,cm)||1;
-$('cm').innerHTML=R.map(function(m,i){return '<div><i style="height:'+cm[i]/cx*60+'px"></i>'+rp(cm[i]).replace('Rp','')+'<br>'+NM[m]+'</div>'}).join('');
+$('cg').innerHTML=R.map(function(m,i){return '<div><i style="height:'+cm[i]/cx*60+'px"></i>'+rp(cm[i]).replace('Rp','')+'<br>'+NM[m]+'</div>'}).join('');
 var g={};D[sel].forEach(function(r){if(!ok(r[0]))return;var k=nn(r[2]);g[k]=g[k]||[0,0];g[k][0]+=r[1];g[k][1]++});
 var L=Object.keys(g).map(function(k){return[k,g[k][0],g[k][1]]}).sort(function(a,b){return mode=='s'?b[1]-a[1]:b[2]-a[2]||b[1]-a[1]}).slice(0,10);
 var t=tot(sel);$('nt').innerHTML=L.map(function(a){return '<div class="row" data-k="'+a[0]+'" style="cursor:pointer"><span style="grid-column:1/3">'+(opn==a[0]?'▾ ':'▸ ')+a[0]+'</span><span class="num">'+rp(a[1])+' · '+a[2]+'x · '+(a[1]/t*100).toFixed(0)+'%</span></div>'+(opn==a[0]?TX(a[0]):'')}).join('');
