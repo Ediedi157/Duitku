@@ -26,7 +26,7 @@ button.on{background:var(--acc);color:#fff}
 .cols{display:flex;align-items:flex-end;gap:6px;height:90px}
 .cols div{flex:1;text-align:center;font-size:10px;color:var(--mut)}
 .cols i{display:block;margin:0 auto 3px;width:70%;background:var(--acc);border-radius:4px 4px 0 0}
-.two{display:flex;flex-direction:column;align-items:center;margin-bottom:3px}.two .u,.two .d{display:flex;flex-direction:column;align-items:center;height:36px}.two .u{justify-content:flex-end}.two .d{justify-content:flex-start;border-top:1px solid var(--mut);width:40px}
+.two{display:flex;flex-direction:column;align-items:center;margin-bottom:3px}.two .u,.two .d{display:flex;flex-direction:column;align-items:center;height:52px}.two .u{justify-content:flex-end}.two .d{justify-content:flex-start;border-top:1px solid var(--mut);width:40px}
 .two i{display:block;width:22px}.two .u i{border-radius:4px 4px 0 0}.two .d i:last-child{border-radius:0 0 4px 4px}
 select{width:100%;border:0;border-radius:8px;padding:9px;background:var(--bar);color:var(--fg);font:inherit}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
@@ -63,7 +63,7 @@ button:active{transform:scale(.96)}
 @keyframes gr{from{grid-template-rows:0fr;opacity:0}}
 @keyframes gc{from{grid-template-rows:1fr;opacity:1}to{grid-template-rows:0fr;opacity:0}}
 .ex.cl{animation:gc .55s cubic-bezier(.4,0,.2,1) both}
-#mon{height:148px}
+#mon{height:172px}
 @keyframes lf{from{opacity:0}}
 .g1 .lb{animation:lf .6s ease .8s both}
 #cat .row>span:first-child{text-transform:capitalize}
@@ -96,7 +96,7 @@ function ok(m){return ms().indexOf(m)>-1}
 function tot(c,m){var s=0;D[c].forEach(function(r){if(m?r[0]==m:ok(r[0]))s+=r[1]});return s}
 function nn(t){t=t.toLowerCase().replace(/\s+\d+$/,'');if(t=='mi ayam')t='mie ayam';return t=='-'?'tanpa catatan':t}
 function out(m){var s=0;for(var c in D)s+=tot(c,m);return s}
-function bar(m){var a=IN[m]||0,o=out(m),H=36,u='',d='',S='repeating-linear-gradient(45deg,var(--red) 0 3px,rgba(0,0,0,.35) 3px 6px)',B=function(h,c){return h>0?'<i style="height:'+h+'px;background:'+c+'"></i>':''};if(o>a){var k=a?a/o*H:0;d=B(k,'var(--red)')+B(H-k,S)}else if(a){var r=o/a*H;u=B(H-r,'var(--grn)');d=B(r,'var(--red)')}return '<div class="two"><div class="u">'+u+'</div><div class="d">'+d+'</div></div>'}
+function bar(m){var a=IN[m]||0,o=out(m),H=52,u='',d='',S='repeating-linear-gradient(45deg,var(--red) 0 3px,rgba(0,0,0,.35) 3px 6px)',B=function(h,c){return h>0?'<i style="height:'+h+'px;background:'+c+'"></i>':''};if(o>a){var k=a?a/o*H:0;d=B(k,'var(--red)')+B(H-k,S)}else if(a){var r=o/a*H;u=B(H-r,'var(--grn)');d=B(r,'var(--red)')}return '<div class="two"><div class="u">'+u+'</div><div class="d">'+d+'</div></div>'}
 function lab(m){var a=IN[m]||0,o=out(m),r='<b style="color:var(--red);font-size:11px">';return o>a?r+pcs(m,0)+'</b><br>'+r+'\u2212'+rp(o-a)+'</b>':'<b style="color:var(--grn);font-size:11px">'+pcs(m,1)+'</b><br>'+r+pcs(m,0)+'</b>'}
 function draw(){
 var R=ms(),mi=0,mo=0;R.forEach(function(m){mi+=IN[m];mo+=out(m)});
