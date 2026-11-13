@@ -26,8 +26,8 @@ button.on{background:var(--acc);color:#fff}
 .cols{display:flex;align-items:flex-end;gap:6px;height:90px}
 .cols div{flex:1;text-align:center;font-size:10px;color:var(--mut)}
 .cols i{display:block;margin:0 auto 3px;width:70%;background:var(--acc);border-radius:4px 4px 0 0}
-.two{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:80px;margin-bottom:3px}
-.two i{display:block;width:22px}.two i:first-child{border-radius:4px 4px 0 0}
+.two{display:flex;flex-direction:column;align-items:center;margin-bottom:3px}.two .u,.two .d{display:flex;flex-direction:column;align-items:center;height:36px}.two .u{justify-content:flex-end}.two .d{justify-content:flex-start;border-top:1px solid var(--mut);width:40px}
+.two i{display:block;width:22px}.two .u i{border-radius:4px 4px 0 0}.two .d i:last-child{border-radius:0 0 4px 4px}
 select{width:100%;border:0;border-radius:8px;padding:9px;background:var(--bar);color:var(--fg);font:inherit}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
 .dn{display:block;margin:0 auto 8px;width:230px;max-width:100%}.dn text{fill:var(--fg);text-anchor:middle}
@@ -80,7 +80,7 @@ button:active{transform:scale(.96)}
 <div class="seg"><select id="mm"><option value="0">Pilih bulan tertentu…</option><option value="6">Juni 2026</option><option value="7">Juli 2026</option><option value="8">Agustus 2026</option><option value="9">September 2026</option><option value="10">Oktober 2026</option><option value="11">November 2026</option></select></div>
 <div class="kpi" id="kpi"></div>
 <div class="card"><h2>Masuk dan keluar per bulan</h2><div class="cols" id="mon"></div>
-<div class="mut" style="margin-top:6px"><span style="color:var(--red)">■</span> keluar <span style="color:var(--grn)">■</span> sisa <span style="display:inline-block;width:9px;height:9px;vertical-align:-1px;background:repeating-linear-gradient(45deg,var(--red) 0 3px,rgba(0,0,0,.35) 3px 6px)"></span> kurang</div></div>
+<div class="mut" style="margin-top:6px"><span style="color:var(--grn)">■</span> sisa <span style="color:var(--red)">■</span> keluar <span style="display:inline-block;width:9px;height:9px;vertical-align:-1px;background:repeating-linear-gradient(45deg,var(--red) 0 3px,rgba(0,0,0,.35) 3px 6px)"></span> kurang</div></div>
 <div class="card"><h2>Kategori pengeluaran</h2><div id="dn"></div><div id="cat"></div></div>
 <div class="card"><h2 id="dt"></h2><div class="cols" id="cg"></div>
 <div class="seg sg" id="mdg"><i class="pl"></i><button id="bs">Menurut Rp</button><button id="bf">Menurut frekuensi</button></div>
@@ -96,14 +96,14 @@ function ok(m){return ms().indexOf(m)>-1}
 function tot(c,m){var s=0;D[c].forEach(function(r){if(m?r[0]==m:ok(r[0]))s+=r[1]});return s}
 function nn(t){t=t.toLowerCase().replace(/\s+\d+$/,'');if(t=='mi ayam')t='mie ayam';return t=='-'?'tanpa catatan':t}
 function out(m){var s=0;for(var c in D)s+=tot(c,m);return s}
-function bar(m){var a=IN[m]||0,o=out(m),h=70,t='',S='repeating-linear-gradient(45deg,var(--red) 0 3px,rgba(0,0,0,.35) 3px 6px)';if(o>a){var k=a?a/o*h:0;t=(h-k>0?'<i style="height:'+(h-k)+'px;background:'+S+'"></i>':'')+(k>0?'<i style="height:'+k+'px;background:var(--red)"></i>':'')}else if(a){var r=o/a*h;t=(h-r>0?'<i style="height:'+(h-r)+'px;background:var(--grn)"></i>':'')+(r>0?'<i style="height:'+r+'px;background:var(--red)"></i>':'')}return '<div class="two">'+t+'</div>'}
-function lab(m){var a=IN[m]||0,o=out(m),r='<b style="color:var(--red);font-size:11px">';return o>a?r+'\u2212'+rp(o-a)+'</b><br>'+r+pcs(m,0)+'</b>':'<b style="color:var(--grn);font-size:11px">'+pcs(m,1)+'</b><br>'+r+pcs(m,0)+'</b>'}
+function bar(m){var a=IN[m]||0,o=out(m),H=36,u='',d='',S='repeating-linear-gradient(45deg,var(--red) 0 3px,rgba(0,0,0,.35) 3px 6px)',B=function(h,c){return h>0?'<i style="height:'+h+'px;background:'+c+'"></i>':''};if(o>a){var k=a?a/o*H:0;d=B(k,'var(--red)')+B(H-k,S)}else if(a){var r=o/a*H;u=B(H-r,'var(--grn)');d=B(r,'var(--red)')}return '<div class="two"><div class="u">'+u+'</div><div class="d">'+d+'</div></div>'}
+function lab(m){var a=IN[m]||0,o=out(m),r='<b style="color:var(--red);font-size:11px">';return o>a?r+pcs(m,0)+'</b><br>'+r+'\u2212'+rp(o-a)+'</b>':'<b style="color:var(--grn);font-size:11px">'+pcs(m,1)+'</b><br>'+r+pcs(m,0)+'</b>'}
 function draw(){
 var R=ms(),mi=0,mo=0;R.forEach(function(m){mi+=IN[m];mo+=out(m)});
 var K1=ms().join(),K2=K1+'|'+sel,c1=K1!=LK1;document.body.className=(c1?'g1 ':'')+(K2!=LK2?'g2':'');LK1=K1;LK2=K2;$('mm').value=M;if(!$('rng').firstChild)$('rng').innerHTML='<i class="pl"></i>'+[[1,'1 bln'],[2,'2 bln'],[3,'3 bln'],[6,'Semua']].map(function(a){return '<button data-n="'+a[0]+'">'+a[1]+'</button>'}).join('');$('rng').querySelectorAll('button').forEach(function(b){b.className=+b.dataset.n==N&&!M?'on':''});sl($('rng'),M?-1:[1,2,3,6].indexOf(N));
 $('kpi').innerHTML='<div><span class="mut">Masuk</span><b data-v="'+mi+'">'+rp(mi)+'</b></div><div><span class="mut">Keluar</span><b data-v="'+mo+'">'+rp(mo)+'</b></div><div><span class="mut">Sisa</span><b data-v="'+(mi-mo)+'">'+rp(mi-mo)+'</b></div>';
 if(document.body.className.indexOf('g1')>-1)cnt();var mx=Math.max.apply(0,R.map(function(m){return Math.max(IN[m],out(m))}));
-$('mon').innerHTML=R.map(function(m){return '<div'+(PT[m]?' style="opacity:.7"':'')+'>'+bar(m)+NM[m]+'<br>'+lab(m)+'<br><small style="font-size:9px;color:var(--acc);'+(PT[m]?'':'visibility:hidden')+'">berjalan</small></div>'}).join('');
+$('mon').innerHTML=R.map(function(m){return '<div>'+bar(m)+NM[m]+'<br>'+lab(m)+'<br><small style="font-size:9px;color:var(--acc);'+(PT[m]?'':'visibility:hidden')+'">berjalan</small></div>'}).join('');
 var cs=Object.keys(D).map(function(c){return[c,tot(c)]}).filter(function(a){return a[1]>0}).sort(function(a,b){return b[1]-a[1]});
 if(!cs.some(function(a){return a[0]==sel}))sel=cs[0][0];
 if(c1||!$('dn').firstChild){var CL={},C=263.9,off=0,sv='',lb='';cs.forEach(function(a,i){CL[a[0]]=i<8?PAL[i]:'#98a2b3';var l=a[1]/mo*C,w=Math.max(l-1,0);sv+='<circle data-c="'+a[0]+'" cx="60" cy="60" r="42" fill="none" stroke="'+CL[a[0]]+'" stroke-width="'+(a[0]==sel?26:20)+'" stroke-dasharray="'+w+' '+(C-w)+'" stroke-dashoffset="'+(-off)+'" transform="rotate(-90 60 60)" style="cursor:pointer;opacity:'+(a[0]==sel?1:.5)+'"/>';if(l/C>=.05){var g=((off+l/2)/C*360-90)*Math.PI/180;lb+='<text class="lb" x="'+(60+42*Math.cos(g)).toFixed(1)+'" y="'+(60+42*Math.sin(g)).toFixed(1)+'" font-size="6" font-weight="700" dominant-baseline="central" style="fill:#fff;stroke:rgba(0,0,0,.35);stroke-width:1px;paint-order:stroke;pointer-events:none">'+(l/C*100).toFixed(1).replace('.',',')+'%</text>'}off+=l});$('dn').innerHTML='<svg class="dn" viewBox="0 0 120 120">'+sv+lb+'<text x="60" y="58" font-size="9" font-weight="700">'+rp(mo)+'</text><text x="60" y="70" font-size="6" style="fill:var(--mut)">total keluar</text></svg>';$('cat').innerHTML=cs.map(function(a){var p=a[1]/mo*100;return '<div class="row'+(a[0]==sel?' sel':'')+'" data-c="'+a[0]+'"><span><i class="dot" style="background:'+CL[a[0]]+'"></i>'+a[0]+'</span><div class="trk"><i style="width:'+p+'%;background:'+CL[a[0]]+'"></i></div><span class="num">'+rp(a[1])+'</span></div>'}).join('');
